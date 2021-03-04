@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">StreetReport</string>
+    <string name="mapa">mapa</string>
+    <string name="notas">notas</string>
+    <string name="reports">ocorrências</string>
+</resources>

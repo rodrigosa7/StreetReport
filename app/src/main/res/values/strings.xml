@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">StreetReport</string>
+    <string name="mapa">map</string>
+    <string name="notas">notes</string>
+    <string name="reports">reports</string>
 </resources>
