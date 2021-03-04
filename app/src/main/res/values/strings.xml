@@ -3,4 +3,7 @@
     <string name="mapa">map</string>
     <string name="notas">notes</string>
     <string name="reports">reports</string>
+    <string name="newNote">new note</string>
+    <string name="edit">edit</string>
+    <string name="remove">remove</string>
 </resources>

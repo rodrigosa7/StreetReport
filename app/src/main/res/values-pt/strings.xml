@@ -4,4 +4,7 @@
     <string name="mapa">mapa</string>
     <string name="notas">notas</string>
     <string name="reports">ocorrências</string>
+    <string name="newNote">nova nota</string>
+    <string name="edit">editar</string>
+    <string name="remove">remover</string>
 </resources>
