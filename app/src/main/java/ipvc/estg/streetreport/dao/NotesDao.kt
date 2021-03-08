@@ -1,0 +1,20 @@
+package ipvc.estg.streetreport.dao
+
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import ipvc.estg.streetreport.entities.Note
+
+@Dao
+interface NotesDao{
+    @Query("SELECT * FROM note_table")
+    fun getAllNotes(): LiveData<List<Note>>
+
+    @Query("DELETE FROM note_table")
+    suspend fun deleteAll()
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(note: Note)
+}
