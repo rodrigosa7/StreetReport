@@ -6,4 +6,9 @@
     <string name="newNote">new note</string>
     <string name="edit">edit</string>
     <string name="remove">remove</string>
+    <string name="title">Name:</string>
+    <string name="hintName">Insert note name</string>
+    <string name="desc">Description:</string>
+    <string name="hintDesc">Insert description</string>
+    <string name="confirmBtn">Confirm</string>
 </resources>

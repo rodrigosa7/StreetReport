@@ -1,7 +1,9 @@
 package ipvc.estg.streetreport
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import ipvc.estg.streetreport.adapter.LineAdapter
 import ipvc.estg.streetreport.dataclass.Note
@@ -23,5 +25,10 @@ class Notes : AppCompatActivity() {
         }
         recycler_view.adapter = LineAdapter(myList)
         recycler_view.layoutManager = LinearLayoutManager(this)
+    }
+
+    fun addNote(view: View) {
+        val intent = Intent(this, AddNote::class.java)
+        startActivity(intent)
     }
 }
