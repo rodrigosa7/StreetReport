@@ -9,6 +9,7 @@ import ipvc.estg.streetreport.dao.NotesDao
 import ipvc.estg.streetreport.entities.Note
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.text.DateFormat
 import java.util.*
 
 @Database(entities = arrayOf(Note::class), version = 1, exportSchema = false)
@@ -27,15 +28,14 @@ public abstract class NoteDB : RoomDatabase() {
                 scope.launch {
                     var noteDao = database.notesDao()
 
-                    // Delete all content here.
-                    noteDao.deleteAll()
+
 
                     // Add sample cities.
-                    var note = Note(1, "Nota 1", "Lombas", Date())
+                    var note = Note(1, "Nota 1", "Lombas", DateFormat.getDateInstance().format(Date()))
                     noteDao.insert(note)
-                    note = Note(2, "Note 2", "Buracos", Date())
+                    note = Note(2, "Note 2", "Buracos", DateFormat.getDateInstance().format(Date()))
                     noteDao.insert(note)
-                    note = Note(3, "Note 3", "Pouca Luz", Date())
+                    note = Note(3, "Note 3", "Pouca Luz", DateFormat.getDateInstance().format(Date()))
                     noteDao.insert(note)
 
                 }

@@ -6,6 +6,10 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 
     packagingOptions {
         exclude 'META-INF/atomicfu.kotlin_module'
