@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_notes.*
 import java.text.DateFormat
 import java.util.*
 
-class Notes : AppCompatActivity() {
+class Notes : AppCompatActivity(), NoteAdapter.EnviarInfo {
 
     private lateinit var noteViewModel: NoteViewModel
     private val newWordActivityRequestCode = 1
@@ -29,7 +29,7 @@ class Notes : AppCompatActivity() {
 
         //recycler_view
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
-        val adapter = NoteAdapter(this)
+        val adapter = NoteAdapter(this, this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -48,20 +48,11 @@ class Notes : AppCompatActivity() {
         val intent = Intent(this, AddNote::class.java)
         startActivityForResult(intent, newWordActivityRequestCode)
     }
-
-    fun editNote(view: View) {
-        var titulo = findViewById<TextView>(R.id.name)
-        var desc = findViewById<TextView>(R.id.desc)
-        val intent = Intent(this, EditNote::class.java)
-        startActivity(intent)
+    override fun passarID(id: Int?){
+        noteViewModel.deleteByID(id)
     }
 
-    fun deleteNote(view:View) {
-        var name = findViewById<TextView>(R.id.name).text
-        Toast.makeText(applicationContext,name,Toast.LENGTH_LONG).show()
-        noteViewModel.deleteByName(name.toString())
 
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

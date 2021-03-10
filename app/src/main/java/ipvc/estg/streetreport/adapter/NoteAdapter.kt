@@ -2,35 +2,47 @@ package ipvc.estg.streetreport.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.media.Image
 import android.os.Build.ID
-import android.provider.AlarmClock.EXTRA_MESSAGE
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import ipvc.estg.streetreport.EditNote
 import ipvc.estg.streetreport.R
 import ipvc.estg.streetreport.entities.Note
-import java.text.DateFormat
+import ipvc.estg.streetreport.viewmodel.NoteViewModel
+
 
 const val TITULO = "NAME"
 const val DESC = "DESC"
 const val ID = "ID"
-class NoteAdapter internal constructor(context: Context): RecyclerView.Adapter<NoteAdapter.NoteViewHolder>(){
+
+
+
+class NoteAdapter internal constructor(context: Context, private val interID:EnviarInfo): RecyclerView.Adapter<NoteAdapter.NoteViewHolder>(){
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var notes = emptyList<Note>()
+
+    interface EnviarInfo {
+        fun passarID(id: Int?)
+    }
+
 
 
 
     class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+
         val noteTitle: TextView = itemView.findViewById(R.id.name)
         val noteDesc: TextView = itemView.findViewById(R.id.desc)
         val noteData: TextView = itemView.findViewById(R.id.data)
 
-        val editbtn: Button = itemView.findViewById(R.id.edit)
-        val removebtn: Button = itemView.findViewById(R.id.remove)
+        val editbtn: ImageButton = itemView.findViewById(R.id.edit)
+        val removebtn: ImageButton = itemView.findViewById(R.id.remove)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -45,20 +57,25 @@ class NoteAdapter internal constructor(context: Context): RecyclerView.Adapter<N
         holder.noteTitle.text = current.name
         holder.noteDesc.text = current.desc
         holder.noteData.text = current.data
-        var id = current.id
+        val id = current.id
 
 
         holder.editbtn.setOnClickListener{
             val context=holder.noteTitle.context
-            val tit= holder.noteTitle.text.toString()
-            val descricao= holder.noteDesc.text.toString()
+            val name= holder.noteTitle.text.toString()
+            val desc= holder.noteDesc.text.toString()
 
             val intent = Intent( context, EditNote::class.java).apply {
-                putExtra(TITULO, tit )
-                putExtra(DESC, descricao )
+                putExtra(TITULO, name )
+                putExtra(DESC, desc )
                 putExtra( ID,id)
             }
             context.startActivity(intent)
+        }
+
+        holder.removebtn.setOnClickListener {
+            val name = holder.noteTitle.text.toString()
+            interID.passarID(id)
         }
 
 
@@ -66,6 +83,8 @@ class NoteAdapter internal constructor(context: Context): RecyclerView.Adapter<N
 
 
     }
+
+
 
     internal fun setNotes(notes: List<Note>){
         this.notes = notes

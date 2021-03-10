@@ -20,4 +20,7 @@ interface NotesDao{
 
     @Query("DELETE FROM note_table WHERE name = :name")
     fun deleteByName(name: String)
+
+    @Query("DELETE FROM note_table WHERE id = :id")
+    fun deleteById(id: Int?)
 }
