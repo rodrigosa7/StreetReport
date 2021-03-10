@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -39,7 +40,9 @@ class Notes : AppCompatActivity() {
         })
 
 
+
     }
+    
 
     fun addNote(view: View) {
         val intent = Intent(this, AddNote::class.java)
@@ -47,8 +50,17 @@ class Notes : AppCompatActivity() {
     }
 
     fun editNote(view: View) {
-        val intent = Intent(this, AddNote::class.java)
+        var titulo = findViewById<TextView>(R.id.name)
+        var desc = findViewById<TextView>(R.id.desc)
+        val intent = Intent(this, EditNote::class.java)
         startActivity(intent)
+    }
+
+    fun deleteNote(view:View) {
+        var name = findViewById<TextView>(R.id.name).text
+        Toast.makeText(applicationContext,name,Toast.LENGTH_LONG).show()
+        noteViewModel.deleteByName(name.toString())
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
