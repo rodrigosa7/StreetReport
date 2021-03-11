@@ -32,9 +32,6 @@ class NoteAdapter internal constructor(context: Context, private val interID:Env
         fun passarID(id: Int?)
     }
 
-
-
-
     class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
         val noteTitle: TextView = itemView.findViewById(R.id.name)

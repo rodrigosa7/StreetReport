@@ -27,7 +27,7 @@ public abstract class NoteDB : RoomDatabase() {
             INSTANCE?.let { database ->
                 scope.launch {
                     var noteDao = database.notesDao()
-
+                    //teste commit
 
 
                     // Add sample notes.
