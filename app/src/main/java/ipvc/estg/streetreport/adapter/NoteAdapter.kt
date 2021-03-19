@@ -71,7 +71,7 @@ class NoteAdapter internal constructor(context: Context, private val interID:Env
         }
 
         holder.removebtn.setOnClickListener {
-            val name = holder.noteTitle.text.toString()
+            //val name = holder.noteTitle.text.toString()
             interID.passarID(id)
         }
 
