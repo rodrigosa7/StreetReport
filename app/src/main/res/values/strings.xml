@@ -16,4 +16,5 @@
     <string name="emptyField">Field can\'t be empty</string>
     <string name="noteUpdated">Note Updated</string>
     <string name="noteDeleted">Note Deleted</string>
+    <string name="title_activity_report_mapa">Map</string>
 </resources>
