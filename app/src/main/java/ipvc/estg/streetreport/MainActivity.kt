@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun abrirReports(view: View) {
-        val intent = Intent(this, ListReports::class.java )
+        val intent = Intent(this, ReportMapa::class.java )
         startActivity(intent)
     }
 }
