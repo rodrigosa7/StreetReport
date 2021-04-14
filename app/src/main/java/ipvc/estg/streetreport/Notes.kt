@@ -42,7 +42,7 @@ class Notes : AppCompatActivity(), NoteAdapter.EnviarInfo {
 
 
     }
-    
+
 
     fun addNote(view: View) {
         val intent = Intent(this, AddNote::class.java)
@@ -50,6 +50,7 @@ class Notes : AppCompatActivity(), NoteAdapter.EnviarInfo {
     }
     override fun passarID(id: Int?){
         noteViewModel.deleteByID(id)
+      Toast.makeText(applicationContext, R.string.noteDeleted, Toast.LENGTH_LONG).show()
     }
 
 
@@ -65,10 +66,10 @@ class Notes : AppCompatActivity(), NoteAdapter.EnviarInfo {
                 val note = Note(name = ptitulo, desc = pdesc, data = DateFormat.getDateInstance().format(Date()))
                 noteViewModel.insert(note)
 
-                Toast.makeText(applicationContext,"Inseri",Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext,R.string.inserted,Toast.LENGTH_LONG).show()
             }
         }else {
-            Toast.makeText(applicationContext, "Não Inseriu", Toast.LENGTH_LONG).show()
+            Toast.makeText(applicationContext, R.string.notinserted, Toast.LENGTH_LONG).show()
         }
     }
 }

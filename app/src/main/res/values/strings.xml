@@ -11,4 +11,9 @@
     <string name="desc">Description:</string>
     <string name="hintDesc">Insert description</string>
     <string name="confirmBtn">Confirm</string>
+    <string name="inserted">Note created</string>
+    <string name="notinserted">Nothing was done</string>
+    <string name="emptyField">Field can\'t be empty</string>
+    <string name="noteUpdated">Note Updated</string>
+    <string name="noteDeleted">Note Deleted</string>
 </resources>

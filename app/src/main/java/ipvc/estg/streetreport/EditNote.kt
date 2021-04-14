@@ -9,6 +9,7 @@ import android.provider.AlarmClock.EXTRA_MESSAGE
 import android.text.TextUtils
 import android.view.View
 import android.widget.EditText
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import ipvc.estg.streetreport.adapter.DESC
 import ipvc.estg.streetreport.adapter.TITULO
@@ -39,20 +40,28 @@ class EditNote : AppCompatActivity() {
     }
 
     fun editarNota(view: View) {
+      val erro:String = getString(R.string.emptyField)
         noteTitle = findViewById(R.id.inputName)
         noteDesc = findViewById(R.id.inputDesc)
         var message3 = intent.getIntExtra(ID, 0)
         val replyIntent = Intent()
-        if (TextUtils.isEmpty(noteTitle.text) || TextUtils.isEmpty(noteDesc.text))  {
-            setResult(Activity.RESULT_CANCELED, replyIntent)
-        } else {
-            val nota = Note(id = message3, name = noteTitle.text.toString(), desc = noteDesc.text.toString(), data = DateFormat.getDateInstance().format(
-                Date()))
-            noteViewModel.editNote(nota)
+      when {
+        TextUtils.isEmpty(noteTitle.text) -> {
+          noteTitle.error = erro
+          //setResult(Activity.RESULT_CANCELED, replyIntent)
 
         }
-        finish()
-
+        TextUtils.isEmpty(noteDesc.text) -> {
+          noteDesc.error = erro
+        }
+        else -> {
+          val nota = Note(id = message3, name = noteTitle.text.toString(), desc = noteDesc.text.toString(), data = DateFormat.getDateInstance().format(
+            Date()))
+          noteViewModel.editNote(nota)
+          Toast.makeText(applicationContext, R.string.noteUpdated, Toast.LENGTH_LONG).show()
+          finish()
+        }
+      }
     }
 
 }

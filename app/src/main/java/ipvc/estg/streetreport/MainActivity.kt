@@ -18,4 +18,9 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, Notes::class.java)
         startActivity(intent)
     }
+
+    fun abrirReports(view: View) {
+        val intent = Intent(this, ListReports::class.java )
+        startActivity(intent)
+    }
 }

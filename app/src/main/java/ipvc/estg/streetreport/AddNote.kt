@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
+import ipvc.estg.streetreport.R.string.emptyField
 import kotlinx.android.synthetic.main.recycler_line.*
 import java.util.*
 
@@ -21,18 +22,27 @@ class AddNote : AppCompatActivity() {
 
         editTitle = findViewById(R.id.inputName)
         editDesc = findViewById(R.id.inputDesc)
-
+        val erro:String = getString(R.string.emptyField)
         val button = findViewById<Button>(R.id.confirmbtn)
         button.setOnClickListener{
             val replyIntent = Intent()
-            if(TextUtils.isEmpty(editTitle.text)){
-                setResult(Activity.RESULT_CANCELED, replyIntent)
-            }else{
+          when {
+              TextUtils.isEmpty(editTitle.text) -> {
+                editTitle.error = erro
+                //setResult(Activity.RESULT_CANCELED, replyIntent)
+
+              }
+              TextUtils.isEmpty(editDesc.text) -> {
+                editDesc.error = erro
+              }
+              else -> {
                 replyIntent.putExtra(EXTRA_REPLY_TITULO, editTitle.text.toString())
                 replyIntent.putExtra(EXTRA_REPLY_DESC, editDesc.text.toString())
                 setResult(Activity.RESULT_OK, replyIntent)
-            }
-            finish()
+                finish()
+              }
+          }
+
         }
     }
     companion object {

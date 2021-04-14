@@ -12,4 +12,9 @@
     <string name="desc">Descrição:</string>
     <string name="hintDesc">Inserir descrição</string>
     <string name="confirmBtn">Confirmar</string>
+    <string name="inserted">Nota criada</string>
+  <string name="notinserted">Nada foi inserido</string>
+  <string name="emptyField">Campo não pode estar vazio</string>
+  <string name="noteUpdated">Nota atualizada</string>
+  <string name="noteDeleted">Nota Apagada</string>
 </resources>
