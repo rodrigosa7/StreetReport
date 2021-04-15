@@ -1,10 +1,15 @@
 package ipvc.estg.streetreport
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
@@ -23,7 +28,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //testar
+        val sharedPref: SharedPreferences = getSharedPreferences(
+            getString(R.string.sharedPref), Context.MODE_PRIVATE)
+
+        val user: String? = sharedPref.getString(R.string.userlogged.toString(), null)
+
+        if(user != null){
+            val intent = Intent(this, ReportMapa::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     fun abrirNotas(view: View) {
@@ -42,6 +56,8 @@ class MainActivity : AppCompatActivity() {
         val pass = findViewById<EditText>(R.id.passwordlogin).text.toString()
         val request = ServiceBuilder.buildService(EndPoints::class.java)
         val call = request.login(user,pass)
+        val sharedPref: SharedPreferences = getSharedPreferences(
+            getString(R.string.sharedPref), Context.MODE_PRIVATE)
 
         val erro = getString(R.string.emptyField)
         if(TextUtils.isEmpty(usernamelogin.text)) {
@@ -56,6 +72,10 @@ class MainActivity : AppCompatActivity() {
 
                 if (response.isSuccessful) {
                     if (response.body()!!.status){
+                        with(sharedPref.edit()) {
+                            putString(R.string.userlogged.toString(), response.body()!!.username)
+                            commit()
+                        }
                         startActivity(intent)
                         finish()
                 }else{

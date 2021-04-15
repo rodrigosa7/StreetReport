@@ -1,8 +1,14 @@
 package ipvc.estg.streetreport
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 
@@ -71,5 +77,34 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
         /*val sydney = LatLng(-34.0, 151.0)
         mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))*/
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        val intent = Intent(this, MainActivity::class.java)
+        val sharedPref: SharedPreferences = getSharedPreferences(
+            getString(R.string.sharedPref), Context.MODE_PRIVATE)
+        return when (item.itemId) {
+            R.id.create_new -> {
+                Toast.makeText(this, "@strings/app_name", Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.logout -> {
+                with(sharedPref.edit()) {
+                    putString(ipvc.estg.streetreport.R.string.userlogged.toString(), null)
+                    commit()
+                }
+                startActivity(intent)
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

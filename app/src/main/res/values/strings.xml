@@ -22,4 +22,7 @@
     <string name="hintUsername">Insert Your Username</string>
     <string name="hintPassword">Insert Your Password</string>
     <string name="login">Login</string>
+    <string name="sharedPref">preferences</string>
+    <string name="userlogged">userlogged</string>
+    <string name="logout">Logout</string>
 </resources>
