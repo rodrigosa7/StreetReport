@@ -21,7 +21,6 @@ class ListReports : AppCompatActivity() {
 
         val request = ServiceBuilder.buildService(EndPoints::class.java)
         val call = request.getReports()
-        Log.d("TAG", "OLA CARALHO1")
         call.enqueue(object : Callback<List<Report>>{
             override fun onResponse(call: Call<List<Report>>, response: Response<List<Report>>) {
 

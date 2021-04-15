@@ -17,4 +17,5 @@
   <string name="emptyField">Campo não pode estar vazio</string>
   <string name="noteUpdated">Nota atualizada</string>
   <string name="noteDeleted">Nota Apagada</string>
+    <string name="title_activity_report_mapa">Mapa</string>
 </resources>
