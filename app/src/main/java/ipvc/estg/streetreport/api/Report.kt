@@ -6,5 +6,6 @@ data class Report(
     val longitude: Double,
     val descricao: String,
     val foto: String,
-    val utilizador_id: Int
+    val utilizador_id: Int,
+    val tipo: String
 )

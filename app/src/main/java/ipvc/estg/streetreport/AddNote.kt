@@ -22,7 +22,7 @@ class AddNote : AppCompatActivity() {
 
         editTitle = findViewById(R.id.inputName)
         editDesc = findViewById(R.id.inputDesc)
-        val erro:String = getString(R.string.emptyField)
+        val erro = getString(R.string.emptyField)
         val button = findViewById<Button>(R.id.confirmbtn)
         button.setOnClickListener{
             val replyIntent = Intent()

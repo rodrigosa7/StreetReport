@@ -17,4 +17,9 @@
     <string name="noteUpdated">Note Updated</string>
     <string name="noteDeleted">Note Deleted</string>
     <string name="title_activity_report_mapa">Map</string>
+    <string name="username">Username:</string>
+    <string name="password">Password:</string>
+    <string name="hintUsername">Insert Your Username</string>
+    <string name="hintPassword">Insert Your Password</string>
+    <string name="login">Login</string>
 </resources>
