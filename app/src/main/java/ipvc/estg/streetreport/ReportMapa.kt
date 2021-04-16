@@ -3,14 +3,18 @@ package ipvc.estg.streetreport
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.core.app.ActivityCompat
+
+import com.google.android.gms.location.*
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -18,11 +22,11 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import ipvc.estg.streetreport.adapter.ReportAdapter
+
 import ipvc.estg.streetreport.api.EndPoints
 import ipvc.estg.streetreport.api.Report
 import ipvc.estg.streetreport.api.ServiceBuilder
-import kotlinx.android.synthetic.main.activity_list_reports.*
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,6 +36,18 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var reports: List<Report>
 
+    // add to implement last known location
+    private lateinit var lastLocation: Location
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    //added to implement location periodic updates
+    private lateinit var locationCallback: LocationCallback
+    private lateinit var locationRequest: LocationRequest
+
+    //added to implement distance between two locations
+    private var continenteLat: Double = 0.0
+    private var continenteLong: Double = 0.0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_report_mapa)
@@ -40,6 +56,24 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        //initialize fusedLocationClient
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        //requestlocation
+        createLocationRequest()
+
+
+
+        //obter atualizacoes da localizacao
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(p0: LocationResult) {
+                super.onLocationResult(p0)
+
+                lastLocation = p0.lastLocation
+
+                var loc = LatLng(lastLocation.latitude, lastLocation.longitude)
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.0f))
+            }
+        }
         val request = ServiceBuilder.buildService(EndPoints::class.java)
         val call = request.getReports()
         var position: LatLng
@@ -60,6 +94,37 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
                 Toast.makeText(this@ReportMapa, "${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+    companion object {
+        // add to implement last known location
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+        //added to implement location periodic updates
+        private const val REQUEST_CHECK_SETTINGS = 2
+    }
+
+    private fun startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE)
+            return
+        }
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null /* Looper */)
+    }
+    private fun createLocationRequest(){
+        locationRequest = LocationRequest()
+        locationRequest.interval = 10000
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+    }
+    override fun onPause(){
+        super.onPause()
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+    public override fun onResume(){
+        super.onResume()
+        startLocationUpdates()
     }
     /**
      * Manipulates the map once available.
