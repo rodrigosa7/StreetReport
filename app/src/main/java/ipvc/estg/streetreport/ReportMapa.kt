@@ -157,7 +157,7 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
             getString(R.string.sharedPref), Context.MODE_PRIVATE)
         return when (item.itemId) {
             R.id.create_new -> {
-                Toast.makeText(this, "@strings/app_name", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show()
                 true
             }
             R.id.logout -> {
