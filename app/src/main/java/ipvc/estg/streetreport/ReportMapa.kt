@@ -1,5 +1,6 @@
 package ipvc.estg.streetreport
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -11,6 +12,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 
@@ -20,6 +22,8 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
@@ -69,15 +73,30 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
                 super.onLocationResult(p0)
 
                 lastLocation = p0.lastLocation
+                if (ActivityCompat.checkSelfPermission(
+                        this@ReportMapa,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                        this@ReportMapa,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED
+                ){
+
+                    return
+                }
+                    mMap.isMyLocationEnabled=true
 
                 var loc = LatLng(lastLocation.latitude, lastLocation.longitude)
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.0f))
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.0f))
+
+
             }
         }
         val request = ServiceBuilder.buildService(EndPoints::class.java)
         val call = request.getReports()
-        var position: LatLng
 
+        var position: LatLng
+        //obter reports e criar markers
         call.enqueue(object : Callback<List<Report>> {
             override fun onResponse(call: Call<List<Report>>, response: Response<List<Report>>) {
 
@@ -85,7 +104,20 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
                     reports = response.body()!!
                     for(report in reports){
                         position = LatLng(report.latitude, report.longitude)
-                        mMap.addMarker(MarkerOptions().position(position).title(report.descricao))
+                        val sharedPref: SharedPreferences = getSharedPreferences(
+                            getString(R.string.sharedPref), Context.MODE_PRIVATE)
+
+                        val user: Int = sharedPref.getInt(R.string.userlogged.toString(), 0)
+                        if(report.utilizador_id != user){
+                            mMap.addMarker(MarkerOptions().position(position).title(report.tipo + " - " + report.descricao).icon(
+                                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
+                            ))
+                        }else{
+                            mMap.addMarker(MarkerOptions().position(position).title(report.tipo + " - " + report.descricao).icon(
+                                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)
+                            ))
+                        }
+
                     }
                 }
             }
@@ -152,7 +184,7 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle item selection
-        val intent = Intent(this, MainActivity::class.java)
+
         val sharedPref: SharedPreferences = getSharedPreferences(
             getString(R.string.sharedPref), Context.MODE_PRIVATE)
         return when (item.itemId) {
@@ -165,6 +197,12 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
                     putString(ipvc.estg.streetreport.R.string.userlogged.toString(), null)
                     commit()
                 }
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            R.id.notes -> {
+                val intent = Intent(this, Notes::class.java)
                 startActivity(intent)
                 true
             }
@@ -172,4 +210,6 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    fun addOcorrencia(view: View) {}
 }

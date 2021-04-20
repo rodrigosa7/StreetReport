@@ -16,11 +16,15 @@
                 android:title="Abre" />
         </menu>
     </item>
+
+
+    <item android:id="@+id/notes"
+        android:title="@string/notas"
+        app:showAsAction="always">
+    </item>
     <item android:id="@+id/logout"
         android:title="@string/logout"
-        app:showAsAction="always">
-
-    </item>
+        app:showAsAction="always"/>
 
 
 

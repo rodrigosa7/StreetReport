@@ -25,7 +25,7 @@ class ListReports : AppCompatActivity() {
             override fun onResponse(call: Call<List<Report>>, response: Response<List<Report>>) {
 
                 if(response.isSuccessful){
-                    Log.d("TAG", "OLA CARALHO2")
+
                     reportRecycler.apply {
                         setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(this@ListReports)

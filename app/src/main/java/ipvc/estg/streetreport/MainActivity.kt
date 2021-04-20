@@ -31,9 +31,9 @@ class MainActivity : AppCompatActivity() {
         val sharedPref: SharedPreferences = getSharedPreferences(
             getString(R.string.sharedPref), Context.MODE_PRIVATE)
 
-        val user: String? = sharedPref.getString(R.string.userlogged.toString(), null)
+        val user: Int = sharedPref.getInt(R.string.userlogged.toString(), 0)
 
-        if(user != null){
+        if(user != 0){
             val intent = Intent(this, ReportMapa::class.java)
             startActivity(intent)
             finish()
@@ -45,10 +45,10 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun abrirReports(view: View) {
+    /*fun abrirReports(view: View) {
         val intent = Intent(this, ReportMapa::class.java )
         startActivity(intent)
-    }
+    }*/
 
     fun login(view: View) {
         val intent = Intent(this, ReportMapa::class.java)
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     if (response.body()!!.status){
                         with(sharedPref.edit()) {
-                            putString(R.string.userlogged.toString(), response.body()!!.username)
+                            putInt(R.string.userlogged.toString(), response.body()!!.username)
                             commit()
                         }
                         startActivity(intent)
