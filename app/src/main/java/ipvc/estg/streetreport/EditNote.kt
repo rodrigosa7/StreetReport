@@ -1,11 +1,9 @@
 package ipvc.estg.streetreport
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Build.ID
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.AlarmClock.EXTRA_MESSAGE
 import android.text.TextUtils
 import android.view.View
 import android.widget.EditText
@@ -31,8 +29,8 @@ class EditNote : AppCompatActivity() {
         val nome = intent.getStringExtra(TITULO)
         val desc = intent.getStringExtra(DESC)
 
-
-        findViewById<EditText>(R.id.inputName).setText(nome)
+        val replyIntent = Intent()
+        findViewById<EditText>(R.id.inputDescReport).setText(nome)
         findViewById<EditText>(R.id.inputDesc).setText(desc)
 
         noteViewModel = ViewModelProvider(this).get(NoteViewModel::class.java)
@@ -41,7 +39,7 @@ class EditNote : AppCompatActivity() {
 
     fun editarNota(view: View) {
       val erro:String = getString(R.string.emptyField)
-        noteTitle = findViewById(R.id.inputName)
+        noteTitle = findViewById(R.id.inputDescReport)
         noteDesc = findViewById(R.id.inputDesc)
         var message3 = intent.getIntExtra(ID, 0)
         val replyIntent = Intent()

@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/inputName"
+        android:id="@+id/inputDescReport"
         android:layout_width="227dp"
         android:layout_height="38dp"
         android:layout_marginStart="64dp"
@@ -51,7 +51,7 @@
         android:gravity="start|top"
         android:hint="@string/hintDesc"
         android:inputType="textMultiLine"
-        app:layout_constraintStart_toStartOf="@+id/inputName"
+        app:layout_constraintStart_toStartOf="@+id/inputDescReport"
         app:layout_constraintTop_toBottomOf="@+id/nameText" />
 
     <Button

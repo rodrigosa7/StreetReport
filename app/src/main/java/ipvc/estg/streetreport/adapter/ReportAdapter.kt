@@ -29,7 +29,7 @@ class ReportViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
 
     fun bind(report: Report) {
         reportDesc.text = report.descricao
-        reportURL.text = report.foto
+        reportURL.text = report.imagem
     }
 
 }

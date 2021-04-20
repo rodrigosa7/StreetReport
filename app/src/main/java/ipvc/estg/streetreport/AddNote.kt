@@ -7,9 +7,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
-import ipvc.estg.streetreport.R.string.emptyField
-import kotlinx.android.synthetic.main.recycler_line.*
-import java.util.*
 
 class AddNote : AppCompatActivity() {
 
@@ -20,7 +17,7 @@ class AddNote : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_note)
 
-        editTitle = findViewById(R.id.inputName)
+        editTitle = findViewById(R.id.inputDescReport)
         editDesc = findViewById(R.id.inputDesc)
         val erro = getString(R.string.emptyField)
         val button = findViewById<Button>(R.id.confirmbtn)

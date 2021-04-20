@@ -25,4 +25,18 @@
     <string name="sharedPref">preferences</string>
     <string name="userlogged">userlogged</string>
     <string name="logout">Logout</string>
+    <string name="obras">Construction</string>
+    <string name="acidente">Accident</string>
+    <string name="terreno">Terrain</string>
+
+    <string-array name="tipos">
+        <item>@string/obras</item>
+        <item>@string/acidente</item>
+        <item>@string/terreno</item>
+        <item>@string/outro</item>
+    </string-array>
+    <string name="outro">Other</string>
+    <string name="tipo">Type:</string>
+    <string name="image">Image:</string>
+    <string name="reportadd">Report Created</string>
 </resources>

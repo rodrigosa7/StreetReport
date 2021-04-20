@@ -1,6 +1,7 @@
 package ipvc.estg.streetreport
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -30,10 +31,13 @@ import com.google.android.gms.maps.model.MarkerOptions
 import ipvc.estg.streetreport.api.EndPoints
 import ipvc.estg.streetreport.api.Report
 import ipvc.estg.streetreport.api.ServiceBuilder
+import ipvc.estg.streetreport.entities.Note
 
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.DateFormat
+import java.util.*
 
 class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
 
@@ -51,6 +55,9 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
     //added to implement distance between two locations
     private var continenteLat: Double = 0.0
     private var continenteLong: Double = 0.0
+
+    private val newReportRequestCode = 1
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,11 +116,11 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
 
                         val user: Int = sharedPref.getInt(R.string.userlogged.toString(), 0)
                         if(report.utilizador_id != user){
-                            mMap.addMarker(MarkerOptions().position(position).title(report.tipo + " - " + report.descricao).icon(
+                            mMap.addMarker(MarkerOptions().position(position).title(report.nomeTipo + " - " + report.descricao).icon(
                                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
                             ))
                         }else{
-                            mMap.addMarker(MarkerOptions().position(position).title(report.tipo + " - " + report.descricao).icon(
+                            mMap.addMarker(MarkerOptions().position(position).title(report.tipo_id + " - " + report.descricao).icon(
                                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)
                             ))
                         }
@@ -211,5 +218,9 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    fun addOcorrencia(view: View) {}
+    fun addOcorrencia(view: View) {
+        val intent = Intent(this, AddReport::class.java).apply { putExtra("localizacao", LatLng(lastLocation.latitude, lastLocation.longitude))}
+        startActivity(intent)
+    }
+
 }

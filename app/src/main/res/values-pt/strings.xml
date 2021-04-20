@@ -23,4 +23,11 @@
     <string name="hintUsername">Introduza o seu utilizador</string>
     <string name="hintPassword">Introduza a sua password</string>
     <string name="login">Entrar</string>
+    <string name="obras">Obras</string>
+    <string name="acidente">Acidente</string>
+    <string name="terreno">Terreno</string>
+    <string name="outro">Outro</string>
+    <string name="tipo">Tipo:</string>
+    <string name="image">Imagem:</string>
+    <string name="reportadd">Report Criado</string>
 </resources>
