@@ -195,7 +195,7 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
         val sharedPref: SharedPreferences = getSharedPreferences(
             getString(R.string.sharedPref), Context.MODE_PRIVATE)
         return when (item.itemId) {
-            R.id.create_new -> {
+            R.id.obras -> {
                 Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show()
                 true
             }

@@ -3,14 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/file"
-        android:icon="@drawable/ic_baseline_menu_24"
         android:title="Menu"
         app:showAsAction="always">
+        <!-- android:icon="@drawable/ic_baseline_menu_24" -->
+
         <!-- "file" submenu -->
         <menu>
             <item
-                android:id="@+id/create_new"
-                android:title="Criar Novo" />
+                android:id="@+id/obras"
+                android:title="" />
             <item
                 android:id="@+id/open"
                 android:title="Abre" />
