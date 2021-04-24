@@ -116,11 +116,11 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
 
                         val user: Int = sharedPref.getInt(R.string.userlogged.toString(), 0)
                         if(report.utilizador_id != user){
-                            mMap.addMarker(MarkerOptions().position(position).title(report.nomeTipo + " - " + report.descricao).icon(
+                            mMap.addMarker(MarkerOptions().position(position).title(report.nomeTipo).snippet(report.descricao).icon(
                                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
                             ))
                         }else{
-                            mMap.addMarker(MarkerOptions().position(position).title(report.tipo_id + " - " + report.descricao).icon(
+                            mMap.addMarker(MarkerOptions().position(position).title(report.nomeTipo).snippet(report.descricao).icon(
                                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)
                             ))
                         }

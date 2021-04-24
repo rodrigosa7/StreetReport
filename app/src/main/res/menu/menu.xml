@@ -13,8 +13,14 @@
                 android:id="@+id/obras"
                 android:title="" />
             <item
-                android:id="@+id/open"
-                android:title="Abre" />
+                android:id="@+id/acidente"
+                android:title="@string/acidente" />
+            <item
+                android:id="@+id/terreno"
+                android:title="@string/terreno" />
+            <item
+                android:id="@+id/outro"
+                android:title="@string/outro" />
         </menu>
     </item>
 
