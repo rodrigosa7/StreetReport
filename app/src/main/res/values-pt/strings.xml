@@ -30,4 +30,11 @@
     <string name="tipo">Tipo:</string>
     <string name="image">Imagem:</string>
     <string name="reportadd">Report Criado</string>
+    <string name="filters">Filtros</string>
+    <string name="delete">Apagar</string>
+    <string name="reportedby">Reportado por:</string>
+    <string name="cancel">Cancelar</string>
+    <string name="all">Todos</string>
+    <string name="selectImage">É necessário escolher uma imagem</string>
+    <string name="noReports">Não foram encontrados reports</string>
 </resources>

@@ -21,22 +21,23 @@ class ListReports : AppCompatActivity() {
 
         val request = ServiceBuilder.buildService(EndPoints::class.java)
         val call = request.getReports()
-        call.enqueue(object : Callback<List<Report>>{
+        call.enqueue(object : Callback<List<Report>> {
             override fun onResponse(call: Call<List<Report>>, response: Response<List<Report>>) {
 
-                if(response.isSuccessful){
+                if (response.isSuccessful) {
 
                     reportRecycler.apply {
                         setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(this@ListReports)
                         adapter = ReportAdapter(response.body()!!)
                     }
-                }else{
+                } else {
                     val err = response.code()
                     Log.d("ERRO", err.toString())
                     Toast.makeText(this@ListReports, "Deu mal", Toast.LENGTH_LONG).show()
                 }
             }
+
             override fun onFailure(call: Call<List<Report>>, t: Throwable) {
                 Toast.makeText(this@ListReports, "${t.message}", Toast.LENGTH_SHORT).show()
             }

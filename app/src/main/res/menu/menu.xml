@@ -3,15 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/file"
-        android:title="Menu"
+        android:title="@string/filters"
         app:showAsAction="always">
         <!-- android:icon="@drawable/ic_baseline_menu_24" -->
 
         <!-- "file" submenu -->
         <menu>
             <item
+                android:id="@+id/todos"
+                android:title="@string/all" />
+            <item
                 android:id="@+id/obras"
-                android:title="" />
+                android:title="@string/obras" />
             <item
                 android:id="@+id/acidente"
                 android:title="@string/acidente" />
