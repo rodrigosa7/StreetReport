@@ -22,9 +22,9 @@
     <string name="hintUsername">Insert Your Username</string>
     <string name="hintPassword">Insert Your Password</string>
     <string name="login">Login</string>
-    <string name="sharedPref">preferences</string>
-    <string name="userlogged">userlogged</string>
-    <string name="logout">Logout</string>
+    <string name="sharedPref" translatable="false">preferences</string>
+    <string name="userlogged" translatable="false">userlogged</string>
+    <string name="logout" translatable="false">Logout</string>
     <string name="obras">Construction</string>
     <string name="acidente">Accident</string>
     <string name="terreno">Terrain</string>
