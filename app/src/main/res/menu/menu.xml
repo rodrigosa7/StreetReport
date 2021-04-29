@@ -24,6 +24,15 @@
             <item
                 android:id="@+id/outro"
                 android:title="@string/outro" />
+            <item
+                android:id="@+id/fivehundred"
+                android:title="@string/fivehundredmeters" />
+            <item
+                android:id="@+id/fivekil"
+                android:title="@string/fivekilometers" />
+            <item
+                android:id="@+id/tenkilometers"
+                android:title="@string/tenkilometers" />
         </menu>
     </item>
 
