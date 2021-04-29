@@ -34,7 +34,7 @@ class ListReports : AppCompatActivity() {
                 } else {
                     val err = response.code()
                     Log.d("ERRO", err.toString())
-                    Toast.makeText(this@ListReports, "Deu mal", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@ListReports, response.code(), Toast.LENGTH_LONG).show()
                 }
             }
 

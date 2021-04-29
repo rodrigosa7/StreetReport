@@ -47,8 +47,8 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWind
     private lateinit var locationRequest: LocationRequest
 
     //added to implement distance between two locations
-    private var continenteLat: Double = 0.0
-    private var continenteLong: Double = 0.0
+    //private var continenteLat: Double = 0.0
+    //private var continenteLong: Double = 0.0
 
     private val newReportRequestCode = 1
 
@@ -89,7 +89,7 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWind
                 mMap.isMyLocationEnabled = true
 
                 var loc = LatLng(lastLocation.latitude, lastLocation.longitude)
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.0f))
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 13.0f))
 
 
             }
@@ -533,6 +533,211 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWind
                 true
 
             }
+            R.id.fivehundred -> {
+                mMap.clear()
+                val request = ServiceBuilder.buildService(EndPoints::class.java)
+                val call = request.getReports()
+
+                var position: LatLng
+                //obter reports e criar markers
+                call.enqueue(object : Callback<List<Report>> {
+                    override fun onResponse(
+                        call: Call<List<Report>>,
+                        response: Response<List<Report>>
+                    ) {
+
+                        if (response.isSuccessful) {
+                            if (response.body()!!.isEmpty()) {
+                                Toast.makeText(
+                                    this@ReportMapa,
+                                    R.string.noReports,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                            reports = response.body()!!
+                            for (report in reports) {
+                                position = LatLng(report.latitude, report.longitude)
+                                val sharedPref: SharedPreferences = getSharedPreferences(
+                                    getString(R.string.sharedPref), Context.MODE_PRIVATE
+                                )
+
+                                val user: Int = sharedPref.getInt(R.string.userlogged.toString(), 0)
+                                if (calcularDistancia(report.latitude, report.longitude, lastLocation.latitude, lastLocation.longitude) < 500.0) {
+                                    if (report.utilizador_id != user) {
+                                        marker = mMap.addMarker(
+                                            MarkerOptions().position(position)
+                                                .title(report.nomeTipo)
+                                                .snippet(report.descricao).icon(
+                                                    BitmapDescriptorFactory.defaultMarker(
+                                                        BitmapDescriptorFactory.HUE_RED
+                                                    )
+                                                )
+                                        )
+                                        marker.tag = report.id
+                                    } else {
+                                        marker = mMap.addMarker(
+                                            MarkerOptions().position(position)
+                                                .title(report.nomeTipo)
+                                                .snippet(report.descricao).icon(
+                                                    BitmapDescriptorFactory.defaultMarker(
+                                                        BitmapDescriptorFactory.HUE_BLUE
+                                                    )
+                                                )
+                                        )
+                                        marker.tag = report.id
+                                    }
+                                }
+
+
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Report>>, t: Throwable) {
+                        Toast.makeText(this@ReportMapa, "${t.message}", Toast.LENGTH_SHORT).show()
+                        Log.d("erro", "${t.message}")
+                    }
+                })
+                true
+
+            }
+            R.id.fivekil -> {
+                mMap.clear()
+                val request = ServiceBuilder.buildService(EndPoints::class.java)
+                val call = request.getReports()
+
+                var position: LatLng
+                //obter reports e criar markers
+                call.enqueue(object : Callback<List<Report>> {
+                    override fun onResponse(
+                        call: Call<List<Report>>,
+                        response: Response<List<Report>>
+                    ) {
+
+                        if (response.isSuccessful) {
+                            if (response.body()!!.isEmpty()) {
+                                Toast.makeText(
+                                    this@ReportMapa,
+                                    R.string.noReports,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                            reports = response.body()!!
+                            for (report in reports) {
+                                position = LatLng(report.latitude, report.longitude)
+                                val sharedPref: SharedPreferences = getSharedPreferences(
+                                    getString(R.string.sharedPref), Context.MODE_PRIVATE
+                                )
+
+                                val user: Int = sharedPref.getInt(R.string.userlogged.toString(), 0)
+                                if (calcularDistancia(report.latitude, report.longitude, lastLocation.latitude, lastLocation.longitude) < 5000.0) {
+                                    if (report.utilizador_id != user) {
+                                        marker = mMap.addMarker(
+                                            MarkerOptions().position(position)
+                                                .title(report.nomeTipo)
+                                                .snippet(report.descricao).icon(
+                                                    BitmapDescriptorFactory.defaultMarker(
+                                                        BitmapDescriptorFactory.HUE_RED
+                                                    )
+                                                )
+                                        )
+                                        marker.tag = report.id
+                                    } else {
+                                        marker = mMap.addMarker(
+                                            MarkerOptions().position(position)
+                                                .title(report.nomeTipo)
+                                                .snippet(report.descricao).icon(
+                                                    BitmapDescriptorFactory.defaultMarker(
+                                                        BitmapDescriptorFactory.HUE_BLUE
+                                                    )
+                                                )
+                                        )
+                                        marker.tag = report.id
+                                    }
+                                }
+
+
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Report>>, t: Throwable) {
+                        Toast.makeText(this@ReportMapa, "${t.message}", Toast.LENGTH_SHORT).show()
+                        Log.d("erro", "${t.message}")
+                    }
+                })
+                true
+
+            }
+            R.id.fivekil -> {
+                mMap.clear()
+                val request = ServiceBuilder.buildService(EndPoints::class.java)
+                val call = request.getReports()
+
+                var position: LatLng
+                //obter reports e criar markers
+                call.enqueue(object : Callback<List<Report>> {
+                    override fun onResponse(
+                        call: Call<List<Report>>,
+                        response: Response<List<Report>>
+                    ) {
+
+                        if (response.isSuccessful) {
+                            if (response.body()!!.isEmpty()) {
+                                Toast.makeText(
+                                    this@ReportMapa,
+                                    R.string.noReports,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                            reports = response.body()!!
+                            for (report in reports) {
+                                position = LatLng(report.latitude, report.longitude)
+                                val sharedPref: SharedPreferences = getSharedPreferences(
+                                    getString(R.string.sharedPref), Context.MODE_PRIVATE
+                                )
+
+                                val user: Int = sharedPref.getInt(R.string.userlogged.toString(), 0)
+                                if (calcularDistancia(report.latitude, report.longitude, lastLocation.latitude, lastLocation.longitude) < 10000.0) {
+                                    if (report.utilizador_id != user) {
+                                        marker = mMap.addMarker(
+                                            MarkerOptions().position(position)
+                                                .title(report.nomeTipo)
+                                                .snippet(report.descricao).icon(
+                                                    BitmapDescriptorFactory.defaultMarker(
+                                                        BitmapDescriptorFactory.HUE_RED
+                                                    )
+                                                )
+                                        )
+                                        marker.tag = report.id
+                                    } else {
+                                        marker = mMap.addMarker(
+                                            MarkerOptions().position(position)
+                                                .title(report.nomeTipo)
+                                                .snippet(report.descricao).icon(
+                                                    BitmapDescriptorFactory.defaultMarker(
+                                                        BitmapDescriptorFactory.HUE_BLUE
+                                                    )
+                                                )
+                                        )
+                                        marker.tag = report.id
+                                    }
+                                }
+
+
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Report>>, t: Throwable) {
+                        Toast.makeText(this@ReportMapa, "${t.message}", Toast.LENGTH_SHORT).show()
+                        Log.d("erro", "${t.message}")
+                    }
+                })
+                true
+
+            }
+
 
             R.id.logout -> {
                 with(sharedPref.edit()) {
@@ -561,6 +766,12 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWind
             )
         }
         startActivity(intent)
+    }
+
+    fun calcularDistancia(lat1: Double, lng1: Double, lat2: Double, lng2: Double): Float {
+        val results = FloatArray(1)
+        Location.distanceBetween(lat1, lng1, lat2,lng2, results)
+        return results[0]
     }
 
 }

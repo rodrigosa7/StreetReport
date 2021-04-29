@@ -46,4 +46,7 @@
     <string name="all">All</string>
     <string name="selectImage">You must select a image</string>
     <string name="noReports">No Reports Where Found</string>
+    <string name="fivehundredmeters">500 meters</string>
+    <string name="fivekilometers">5 kilometers</string>
+    <string name="tenkilometers">10 kilometers</string>
 </resources>
