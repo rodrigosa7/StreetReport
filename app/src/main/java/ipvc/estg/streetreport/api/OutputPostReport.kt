@@ -1,6 +1,6 @@
 package ipvc.estg.streetreport.api
 
-class OutputPostReport (
-     val status: Boolean,
-     val msg: String
+class OutputPostReport(
+    val status: Boolean,
+    val msg: String
 )

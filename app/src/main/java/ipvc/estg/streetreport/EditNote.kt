@@ -38,28 +38,34 @@ class EditNote : AppCompatActivity() {
     }
 
     fun editarNota(view: View) {
-      val erro:String = getString(R.string.emptyField)
+        val erro: String = getString(R.string.emptyField)
         noteTitle = findViewById(R.id.inputDescReport)
         noteDesc = findViewById(R.id.inputDesc)
         var message3 = intent.getIntExtra(ID, 0)
         val replyIntent = Intent()
-      when {
-        TextUtils.isEmpty(noteTitle.text) -> {
-          noteTitle.error = erro
-          //setResult(Activity.RESULT_CANCELED, replyIntent)
+        when {
+            TextUtils.isEmpty(noteTitle.text) -> {
+                noteTitle.error = erro
+                //setResult(Activity.RESULT_CANCELED, replyIntent)
 
+            }
+            TextUtils.isEmpty(noteDesc.text) -> {
+                noteDesc.error = erro
+            }
+            else -> {
+                val nota = Note(
+                    id = message3,
+                    name = noteTitle.text.toString(),
+                    desc = noteDesc.text.toString(),
+                    data = DateFormat.getDateInstance().format(
+                        Date()
+                    )
+                )
+                noteViewModel.editNote(nota)
+                Toast.makeText(applicationContext, R.string.noteUpdated, Toast.LENGTH_LONG).show()
+                finish()
+            }
         }
-        TextUtils.isEmpty(noteDesc.text) -> {
-          noteDesc.error = erro
-        }
-        else -> {
-          val nota = Note(id = message3, name = noteTitle.text.toString(), desc = noteDesc.text.toString(), data = DateFormat.getDateInstance().format(
-            Date()))
-          noteViewModel.editNote(nota)
-          Toast.makeText(applicationContext, R.string.noteUpdated, Toast.LENGTH_LONG).show()
-          finish()
-        }
-      }
     }
 
 }

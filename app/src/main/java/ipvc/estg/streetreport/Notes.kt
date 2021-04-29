@@ -35,10 +35,9 @@ class Notes : AppCompatActivity(), NoteAdapter.EnviarInfo {
 
         //view model
         noteViewModel = ViewModelProvider(this).get(NoteViewModel::class.java)
-        noteViewModel.allNotes.observe(this, Observer {
-            notes -> notes?.let {adapter.setNotes(it)}
+        noteViewModel.allNotes.observe(this, Observer { notes ->
+            notes?.let { adapter.setNotes(it) }
         })
-
 
 
     }
@@ -48,27 +47,31 @@ class Notes : AppCompatActivity(), NoteAdapter.EnviarInfo {
         val intent = Intent(this, AddNote::class.java)
         startActivityForResult(intent, newWordActivityRequestCode)
     }
-    override fun passarID(id: Int?){
-        noteViewModel.deleteByID(id)
-      Toast.makeText(applicationContext, R.string.noteDeleted, Toast.LENGTH_LONG).show()
-    }
 
+    override fun passarID(id: Int?) {
+        noteViewModel.deleteByID(id)
+        Toast.makeText(applicationContext, R.string.noteDeleted, Toast.LENGTH_LONG).show()
+    }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK){
+        if (requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK) {
             val ptitulo = data?.getStringExtra(AddNote.EXTRA_REPLY_TITULO)
             val pdesc = data?.getStringExtra(AddNote.EXTRA_REPLY_DESC)
 
-            if(ptitulo != null && pdesc != null) {
-                val note = Note(name = ptitulo, desc = pdesc, data = DateFormat.getDateInstance().format(Date()))
+            if (ptitulo != null && pdesc != null) {
+                val note = Note(
+                    name = ptitulo,
+                    desc = pdesc,
+                    data = DateFormat.getDateInstance().format(Date())
+                )
                 noteViewModel.insert(note)
 
-                Toast.makeText(applicationContext,R.string.inserted,Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, R.string.inserted, Toast.LENGTH_LONG).show()
             }
-        }else {
+        } else {
             Toast.makeText(applicationContext, R.string.notinserted, Toast.LENGTH_LONG).show()
         }
     }

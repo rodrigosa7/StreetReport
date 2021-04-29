@@ -5,7 +5,7 @@ import androidx.room.*
 import ipvc.estg.streetreport.entities.Note
 
 @Dao
-interface NotesDao{
+interface NotesDao {
     @Query("SELECT * FROM note_table")
     fun getAllNotes(): LiveData<List<Note>>
 

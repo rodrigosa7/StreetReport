@@ -1,7 +1,7 @@
 package ipvc.estg.streetreport.api
 
-data class Login (
+data class Login(
     val status: Boolean,
     val MSG: String,
     val username: Int
-    )
+)

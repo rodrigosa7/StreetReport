@@ -11,6 +11,15 @@ interface EndPoints {
     @GET("reports")
     fun getReports(): Call<List<Report>>
 
+    @GET("reports/{id}")
+    fun getReportByID(@Path("id") id: String): Call<Report>
+
+    @GET("reports/tipo/{tipo}")
+    fun getReportByTipo(@Path("tipo") id: String): Call<List<Report>>
+
+    @DELETE("reports/{id}")
+    fun deleteReportByID(@Path("id") id: String): Call<OutputPostReport>
+
     @FormUrlEncoded
     @POST("utilizador")
     fun login(@Field("username") first: String?,@Field("password") second: String?): Call<Login>
@@ -26,6 +35,15 @@ interface EndPoints {
         @Part("long") long: RequestBody,
         @Part("user_id") user_id: RequestBody,
         @Part("tipo_id") tipo_id: RequestBody,
+        @Part imagem: MultipartBody.Part
+    ): Call<OutputPostReport>
+
+    @Multipart
+    @POST("reports/{id}")
+    fun updateReport(
+        @Path("id") id: String,
+        @Part("desc") desc: RequestBody,
+        @Part("user_id") user_id: RequestBody,
         @Part imagem: MultipartBody.Part
     ): Call<OutputPostReport>
 }

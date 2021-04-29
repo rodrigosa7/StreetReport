@@ -29,11 +29,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val sharedPref: SharedPreferences = getSharedPreferences(
-            getString(R.string.sharedPref), Context.MODE_PRIVATE)
+            getString(R.string.sharedPref), Context.MODE_PRIVATE
+        )
 
         val user: Int = sharedPref.getInt(R.string.userlogged.toString(), 0)
 
-        if(user != 0){
+        if (user != 0) {
             val intent = Intent(this, ReportMapa::class.java)
             startActivity(intent)
             finish()
@@ -55,39 +56,44 @@ class MainActivity : AppCompatActivity() {
         val user = findViewById<EditText>(R.id.usernamelogin).text.toString()
         val pass = findViewById<EditText>(R.id.passwordlogin).text.toString()
         val request = ServiceBuilder.buildService(EndPoints::class.java)
-        val call = request.login(user,pass)
+        val call = request.login(user, pass)
         val sharedPref: SharedPreferences = getSharedPreferences(
-            getString(R.string.sharedPref), Context.MODE_PRIVATE)
+            getString(R.string.sharedPref), Context.MODE_PRIVATE
+        )
 
         val erro = getString(R.string.emptyField)
-        if(TextUtils.isEmpty(usernamelogin.text)) {
+        if (TextUtils.isEmpty(usernamelogin.text)) {
             usernamelogin.error = erro
 
-        }else if(TextUtils.isEmpty(passwordlogin.text)) {
-                passwordlogin.error = erro
-        }
-        else{
-        call.enqueue(object : Callback<Login>{
-            override fun onResponse(call: Call<Login>, response: Response<Login>) {
+        } else if (TextUtils.isEmpty(passwordlogin.text)) {
+            passwordlogin.error = erro
+        } else {
+            call.enqueue(object : Callback<Login> {
+                override fun onResponse(call: Call<Login>, response: Response<Login>) {
 
-                if (response.isSuccessful) {
-                    if (response.body()!!.status){
-                        with(sharedPref.edit()) {
-                            putInt(R.string.userlogged.toString(), response.body()!!.username)
-                            commit()
+                    if (response.isSuccessful) {
+                        if (response.body()!!.status) {
+                            with(sharedPref.edit()) {
+                                putInt(R.string.userlogged.toString(), response.body()!!.username)
+                                commit()
+                            }
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            Toast.makeText(
+                                this@MainActivity,
+                                response.body()!!.MSG,
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-                        startActivity(intent)
-                        finish()
-                }else{
-                        Toast.makeText(this@MainActivity, response.body()!!.MSG, Toast.LENGTH_SHORT).show()
                     }
-            }
 
-            }
-            override fun onFailure(call: Call<Login>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+                }
+
+                override fun onFailure(call: Call<Login>, t: Throwable) {
+                    Toast.makeText(this@MainActivity, "${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
         }
 
     }

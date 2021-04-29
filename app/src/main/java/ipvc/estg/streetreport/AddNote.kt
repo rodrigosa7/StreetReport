@@ -21,27 +21,28 @@ class AddNote : AppCompatActivity() {
         editDesc = findViewById(R.id.inputDesc)
         val erro = getString(R.string.emptyField)
         val button = findViewById<Button>(R.id.confirmbtn)
-        button.setOnClickListener{
+        button.setOnClickListener {
             val replyIntent = Intent()
-          when {
-              TextUtils.isEmpty(editTitle.text) -> {
-                editTitle.error = erro
-                //setResult(Activity.RESULT_CANCELED, replyIntent)
+            when {
+                TextUtils.isEmpty(editTitle.text) -> {
+                    editTitle.error = erro
+                    //setResult(Activity.RESULT_CANCELED, replyIntent)
 
-              }
-              TextUtils.isEmpty(editDesc.text) -> {
-                editDesc.error = erro
-              }
-              else -> {
-                replyIntent.putExtra(EXTRA_REPLY_TITULO, editTitle.text.toString())
-                replyIntent.putExtra(EXTRA_REPLY_DESC, editDesc.text.toString())
-                setResult(Activity.RESULT_OK, replyIntent)
-                finish()
-              }
-          }
+                }
+                TextUtils.isEmpty(editDesc.text) -> {
+                    editDesc.error = erro
+                }
+                else -> {
+                    replyIntent.putExtra(EXTRA_REPLY_TITULO, editTitle.text.toString())
+                    replyIntent.putExtra(EXTRA_REPLY_DESC, editDesc.text.toString())
+                    setResult(Activity.RESULT_OK, replyIntent)
+                    finish()
+                }
+            }
 
         }
     }
+
     companion object {
         const val EXTRA_REPLY_TITULO = "titulo"
         const val EXTRA_REPLY_DESC = "desc"

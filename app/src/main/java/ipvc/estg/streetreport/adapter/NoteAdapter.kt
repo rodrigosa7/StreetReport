@@ -23,8 +23,8 @@ const val DESC = "DESC"
 const val ID = "ID"
 
 
-
-class NoteAdapter internal constructor(context: Context, private val interID:EnviarInfo): RecyclerView.Adapter<NoteAdapter.NoteViewHolder>(){
+class NoteAdapter internal constructor(context: Context, private val interID: EnviarInfo) :
+    RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var notes = emptyList<Note>()
 
@@ -32,7 +32,7 @@ class NoteAdapter internal constructor(context: Context, private val interID:Env
         fun passarID(id: Int?)
     }
 
-    class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val noteTitle: TextView = itemView.findViewById(R.id.name)
         val noteDesc: TextView = itemView.findViewById(R.id.desc)
@@ -57,15 +57,15 @@ class NoteAdapter internal constructor(context: Context, private val interID:Env
         val id = current.id
 
 
-        holder.editbtn.setOnClickListener{
-            val context=holder.noteTitle.context
-            val name= holder.noteTitle.text.toString()
-            val desc= holder.noteDesc.text.toString()
+        holder.editbtn.setOnClickListener {
+            val context = holder.noteTitle.context
+            val name = holder.noteTitle.text.toString()
+            val desc = holder.noteDesc.text.toString()
 
-            val intent = Intent( context, EditNote::class.java).apply {
-                putExtra(TITULO, name )
-                putExtra(DESC, desc )
-                putExtra( ID,id)
+            val intent = Intent(context, EditNote::class.java).apply {
+                putExtra(TITULO, name)
+                putExtra(DESC, desc)
+                putExtra(ID, id)
             }
             context.startActivity(intent)
         }
@@ -76,14 +76,10 @@ class NoteAdapter internal constructor(context: Context, private val interID:Env
         }
 
 
-
-
-
     }
 
 
-
-    internal fun setNotes(notes: List<Note>){
+    internal fun setNotes(notes: List<Note>) {
         this.notes = notes
         notifyDataSetChanged()
     }

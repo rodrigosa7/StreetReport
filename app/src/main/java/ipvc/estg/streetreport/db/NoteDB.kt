@@ -31,11 +31,13 @@ public abstract class NoteDB : RoomDatabase() {
 
 
                     // Add sample notes.
-                    var note = Note(1, "Nota 1", "Lombas", DateFormat.getDateInstance().format(Date()))
+                    var note =
+                        Note(1, "Nota 1", "Lombas", DateFormat.getDateInstance().format(Date()))
                     noteDao.insert(note)
                     note = Note(2, "Note 2", "Buracos", DateFormat.getDateInstance().format(Date()))
                     noteDao.insert(note)
-                    note = Note(3, "Note 3", "Pouca Luz", DateFormat.getDateInstance().format(Date()))
+                    note =
+                        Note(3, "Note 3", "Pouca Luz", DateFormat.getDateInstance().format(Date()))
                     noteDao.insert(note)
 
                 }

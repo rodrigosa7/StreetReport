@@ -1,45 +1,39 @@
 package ipvc.estg.streetreport
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-
 import com.google.android.gms.location.*
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-
 import ipvc.estg.streetreport.api.EndPoints
 import ipvc.estg.streetreport.api.Report
 import ipvc.estg.streetreport.api.ServiceBuilder
-import ipvc.estg.streetreport.entities.Note
-
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.text.DateFormat
-import java.util.*
 
-class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
+const val ID = "ID"
+
+class ReportMapa : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var reports: List<Report>
@@ -58,6 +52,8 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
 
     private val newReportRequestCode = 1
 
+    //markers
+    private lateinit var marker: Marker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +69,6 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
         createLocationRequest()
 
 
-
         //obter atualizacoes da localizacao
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
@@ -87,11 +82,11 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
                         this@ReportMapa,
                         Manifest.permission.ACCESS_COARSE_LOCATION
                     ) != PackageManager.PERMISSION_GRANTED
-                ){
+                ) {
 
                     return
                 }
-                    mMap.isMyLocationEnabled=true
+                mMap.isMyLocationEnabled = true
 
                 var loc = LatLng(lastLocation.latitude, lastLocation.longitude)
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.0f))
@@ -109,21 +104,31 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
 
                 if (response.isSuccessful) {
                     reports = response.body()!!
-                    for(report in reports){
+                    for (report in reports) {
                         position = LatLng(report.latitude, report.longitude)
                         val sharedPref: SharedPreferences = getSharedPreferences(
-                            getString(R.string.sharedPref), Context.MODE_PRIVATE)
+                            getString(R.string.sharedPref), Context.MODE_PRIVATE
+                        )
 
                         val user: Int = sharedPref.getInt(R.string.userlogged.toString(), 0)
-                        if(report.utilizador_id != user){
-                            mMap.addMarker(MarkerOptions().position(position).title(report.nomeTipo).snippet(report.descricao).icon(
-                                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
-                            ))
-                        }else{
-                            mMap.addMarker(MarkerOptions().position(position).title(report.nomeTipo).snippet(report.descricao).icon(
-                                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)
-                            ))
+                        if (report.utilizador_id != user) {
+                            marker = mMap.addMarker(
+                                MarkerOptions().position(position).title(report.nomeTipo)
+                                    .snippet(report.descricao).icon(
+                                    BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
+                                )
+                            )
+                            marker.tag = report.id
+                        } else {
+                            marker = mMap.addMarker(
+                                MarkerOptions().position(position).title(report.nomeTipo)
+                                    .snippet(report.descricao).icon(
+                                    BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)
+                                )
+                            )
+                            marker.tag = report.id
                         }
+
 
                     }
                 }
@@ -131,56 +136,74 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
 
             override fun onFailure(call: Call<List<Report>>, t: Throwable) {
                 Toast.makeText(this@ReportMapa, "${t.message}", Toast.LENGTH_SHORT).show()
+                Log.d("erro", "${t.message}")
             }
         })
+
     }
+
     companion object {
         // add to implement last known location
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+
         //added to implement location periodic updates
         private const val REQUEST_CHECK_SETTINGS = 2
     }
 
-    private fun startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(this,
+    private fun startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+
+            ActivityCompat.requestPermissions(
+                this,
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQUEST_CODE)
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
             return
         }
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null /* Looper */)
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            null /* Looper */
+        )
     }
-    private fun createLocationRequest(){
+
+    private fun createLocationRequest() {
         locationRequest = LocationRequest()
         locationRequest.interval = 10000
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
-    override fun onPause(){
+
+    override fun onPause() {
         super.onPause()
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
-    public override fun onResume(){
+
+    public override fun onResume() {
         super.onResume()
         startLocationUpdates()
     }
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
 
-        // Add a marker in Sydney and move the camera
-        /*val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))*/
+    override fun onInfoWindowClick(marker: Marker) {
+        val intent = Intent(this, ReportInfo::class.java).apply {
+            putExtra(ID, marker.tag.toString())
+        }
+        startActivity(intent)
+
+
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+
+
+        mMap = googleMap
+        mMap.setOnInfoWindowClickListener(this)
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -189,16 +212,328 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
         return true
     }
 
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle item selection
 
         val sharedPref: SharedPreferences = getSharedPreferences(
-            getString(R.string.sharedPref), Context.MODE_PRIVATE)
+            getString(R.string.sharedPref), Context.MODE_PRIVATE
+        )
         return when (item.itemId) {
-            R.id.obras -> {
-                Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show()
+            R.id.todos -> {
+                val request = ServiceBuilder.buildService(EndPoints::class.java)
+                val call = request.getReports()
+
+                var position: LatLng
+                //obter reports e criar markers
+                call.enqueue(object : Callback<List<Report>> {
+                    override fun onResponse(
+                        call: Call<List<Report>>,
+                        response: Response<List<Report>>
+                    ) {
+
+                        if (response.isSuccessful) {
+                            reports = response.body()!!
+                            for (report in reports) {
+                                position = LatLng(report.latitude, report.longitude)
+                                val sharedPref: SharedPreferences = getSharedPreferences(
+                                    getString(R.string.sharedPref), Context.MODE_PRIVATE
+                                )
+
+                                val user: Int = sharedPref.getInt(R.string.userlogged.toString(), 0)
+                                if (report.utilizador_id != user) {
+                                    marker = mMap.addMarker(
+                                        MarkerOptions().position(position).title(report.nomeTipo)
+                                            .snippet(report.descricao).icon(
+                                            BitmapDescriptorFactory.defaultMarker(
+                                                BitmapDescriptorFactory.HUE_RED
+                                            )
+                                        )
+                                    )
+                                    marker.tag = report.id
+                                } else {
+                                    marker = mMap.addMarker(
+                                        MarkerOptions().position(position).title(report.nomeTipo)
+                                            .snippet(report.descricao).icon(
+                                            BitmapDescriptorFactory.defaultMarker(
+                                                BitmapDescriptorFactory.HUE_BLUE
+                                            )
+                                        )
+                                    )
+                                    marker.tag = report.id
+                                }
+
+
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Report>>, t: Throwable) {
+                        Toast.makeText(this@ReportMapa, "${t.message}", Toast.LENGTH_SHORT).show()
+                        Log.d("erro", "${t.message}")
+                    }
+                })
                 true
             }
+            R.id.obras -> {
+                mMap.clear()
+                val request = ServiceBuilder.buildService(EndPoints::class.java)
+                val call = request.getReportByTipo("Obras")
+
+                var position: LatLng
+                //obter reports e criar markers
+                call.enqueue(object : Callback<List<Report>> {
+                    override fun onResponse(
+                        call: Call<List<Report>>,
+                        response: Response<List<Report>>
+                    ) {
+
+                        if (response.isSuccessful) {
+                            if (response.body()!!.isEmpty()) {
+                                Toast.makeText(
+                                    this@ReportMapa,
+                                    R.string.noReports,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
+                            reports = response.body()!!
+                            for (report in reports) {
+                                position = LatLng(report.latitude, report.longitude)
+                                val sharedPref: SharedPreferences = getSharedPreferences(
+                                    getString(R.string.sharedPref), Context.MODE_PRIVATE
+                                )
+
+                                val user: Int = sharedPref.getInt(R.string.userlogged.toString(), 0)
+                                if (report.utilizador_id != user) {
+                                    marker = mMap.addMarker(
+                                        MarkerOptions().position(position).title(report.nomeTipo)
+                                            .snippet(report.descricao).icon(
+                                            BitmapDescriptorFactory.defaultMarker(
+                                                BitmapDescriptorFactory.HUE_RED
+                                            )
+                                        )
+                                    )
+                                    marker.tag = report.id
+                                } else {
+                                    marker = mMap.addMarker(
+                                        MarkerOptions().position(position).title(report.nomeTipo)
+                                            .snippet(report.descricao).icon(
+                                            BitmapDescriptorFactory.defaultMarker(
+                                                BitmapDescriptorFactory.HUE_BLUE
+                                            )
+                                        )
+                                    )
+                                    marker.tag = report.id
+                                }
+
+
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Report>>, t: Throwable) {
+                        Toast.makeText(this@ReportMapa, "${t.message}", Toast.LENGTH_SHORT).show()
+
+                    }
+                })
+
+                true
+
+            }
+            R.id.terreno -> {
+                mMap.clear()
+                val request = ServiceBuilder.buildService(EndPoints::class.java)
+                val call = request.getReportByTipo("Terreno")
+
+                var position: LatLng
+                //obter reports e criar markers
+                call.enqueue(object : Callback<List<Report>> {
+                    override fun onResponse(
+                        call: Call<List<Report>>,
+                        response: Response<List<Report>>
+                    ) {
+
+                        if (response.isSuccessful) {
+                            if (response.body()!!.isEmpty()) {
+                                Toast.makeText(
+                                    this@ReportMapa,
+                                    R.string.noReports,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                            reports = response.body()!!
+                            for (report in reports) {
+                                position = LatLng(report.latitude, report.longitude)
+                                val sharedPref: SharedPreferences = getSharedPreferences(
+                                    getString(R.string.sharedPref), Context.MODE_PRIVATE
+                                )
+
+                                val user: Int = sharedPref.getInt(R.string.userlogged.toString(), 0)
+                                if (report.utilizador_id != user) {
+                                    marker = mMap.addMarker(
+                                        MarkerOptions().position(position).title(report.nomeTipo)
+                                            .snippet(report.descricao).icon(
+                                            BitmapDescriptorFactory.defaultMarker(
+                                                BitmapDescriptorFactory.HUE_RED
+                                            )
+                                        )
+                                    )
+                                    marker.tag = report.id
+                                } else {
+                                    marker = mMap.addMarker(
+                                        MarkerOptions().position(position).title(report.nomeTipo)
+                                            .snippet(report.descricao).icon(
+                                            BitmapDescriptorFactory.defaultMarker(
+                                                BitmapDescriptorFactory.HUE_BLUE
+                                            )
+                                        )
+                                    )
+                                    marker.tag = report.id
+                                }
+
+
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Report>>, t: Throwable) {
+                        Toast.makeText(this@ReportMapa, "${t.message}", Toast.LENGTH_SHORT).show()
+                        Log.d("erro", "${t.message}")
+                    }
+                })
+                true
+
+            }
+            R.id.acidente -> {
+                mMap.clear()
+                val request = ServiceBuilder.buildService(EndPoints::class.java)
+                val call = request.getReportByTipo("Acidente")
+
+                var position: LatLng
+                //obter reports e criar markers
+                call.enqueue(object : Callback<List<Report>> {
+                    override fun onResponse(
+                        call: Call<List<Report>>,
+                        response: Response<List<Report>>
+                    ) {
+
+                        if (response.isSuccessful) {
+                            if (response.body()!!.isEmpty()) {
+                                Toast.makeText(
+                                    this@ReportMapa,
+                                    R.string.noReports,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                            reports = response.body()!!
+                            for (report in reports) {
+                                position = LatLng(report.latitude, report.longitude)
+                                val sharedPref: SharedPreferences = getSharedPreferences(
+                                    getString(R.string.sharedPref), Context.MODE_PRIVATE
+                                )
+
+                                val user: Int = sharedPref.getInt(R.string.userlogged.toString(), 0)
+                                if (report.utilizador_id != user) {
+                                    marker = mMap.addMarker(
+                                        MarkerOptions().position(position).title(report.nomeTipo)
+                                            .snippet(report.descricao).icon(
+                                            BitmapDescriptorFactory.defaultMarker(
+                                                BitmapDescriptorFactory.HUE_RED
+                                            )
+                                        )
+                                    )
+                                    marker.tag = report.id
+                                } else {
+                                    marker = mMap.addMarker(
+                                        MarkerOptions().position(position).title(report.nomeTipo)
+                                            .snippet(report.descricao).icon(
+                                            BitmapDescriptorFactory.defaultMarker(
+                                                BitmapDescriptorFactory.HUE_BLUE
+                                            )
+                                        )
+                                    )
+                                    marker.tag = report.id
+                                }
+
+
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Report>>, t: Throwable) {
+                        Toast.makeText(this@ReportMapa, "${t.message}", Toast.LENGTH_SHORT).show()
+                        Log.d("erro", "${t.message}")
+                    }
+                })
+                true
+
+            }
+            R.id.outro -> {
+                mMap.clear()
+                val request = ServiceBuilder.buildService(EndPoints::class.java)
+                val call = request.getReportByTipo("Outro")
+
+                var position: LatLng
+                //obter reports e criar markers
+                call.enqueue(object : Callback<List<Report>> {
+                    override fun onResponse(
+                        call: Call<List<Report>>,
+                        response: Response<List<Report>>
+                    ) {
+
+                        if (response.isSuccessful) {
+                            if (response.body()!!.isEmpty()) {
+                                Toast.makeText(
+                                    this@ReportMapa,
+                                    R.string.noReports,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                            reports = response.body()!!
+                            for (report in reports) {
+                                position = LatLng(report.latitude, report.longitude)
+                                val sharedPref: SharedPreferences = getSharedPreferences(
+                                    getString(R.string.sharedPref), Context.MODE_PRIVATE
+                                )
+
+                                val user: Int = sharedPref.getInt(R.string.userlogged.toString(), 0)
+                                if (report.utilizador_id != user) {
+                                    marker = mMap.addMarker(
+                                        MarkerOptions().position(position).title(report.nomeTipo)
+                                            .snippet(report.descricao).icon(
+                                            BitmapDescriptorFactory.defaultMarker(
+                                                BitmapDescriptorFactory.HUE_RED
+                                            )
+                                        )
+                                    )
+                                    marker.tag = report.id
+                                } else {
+                                    marker = mMap.addMarker(
+                                        MarkerOptions().position(position).title(report.nomeTipo)
+                                            .snippet(report.descricao).icon(
+                                            BitmapDescriptorFactory.defaultMarker(
+                                                BitmapDescriptorFactory.HUE_BLUE
+                                            )
+                                        )
+                                    )
+                                    marker.tag = report.id
+                                }
+
+
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Report>>, t: Throwable) {
+                        Toast.makeText(this@ReportMapa, "${t.message}", Toast.LENGTH_SHORT).show()
+                        Log.d("erro", "${t.message}")
+                    }
+                })
+                true
+
+            }
+
             R.id.logout -> {
                 with(sharedPref.edit()) {
                     putString(ipvc.estg.streetreport.R.string.userlogged.toString(), null)
@@ -219,7 +554,12 @@ class ReportMapa : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun addOcorrencia(view: View) {
-        val intent = Intent(this, AddReport::class.java).apply { putExtra("localizacao", LatLng(lastLocation.latitude, lastLocation.longitude))}
+        val intent = Intent(this, AddReport::class.java).apply {
+            putExtra(
+                "localizacao",
+                LatLng(lastLocation.latitude, lastLocation.longitude)
+            )
+        }
         startActivity(intent)
     }
 
